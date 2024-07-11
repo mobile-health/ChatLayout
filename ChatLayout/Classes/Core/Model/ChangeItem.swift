@@ -15,7 +15,6 @@ import UIKit
 
 /// Internal replacement for `UICollectionViewUpdateItem`.
 enum ChangeItem: Equatable {
-
     /// Delete section at `sectionIndex`
     case sectionDelete(sectionIndex: Int)
 
@@ -84,7 +83,7 @@ enum ChangeItem: Equatable {
                 self = .itemDelete(itemIndexPath: indexPath)
             }
         case .reload:
-            guard let indexPath = indexPathAfterUpdate else {
+            guard let indexPath = indexPathBeforeUpdate else {
                 assertionFailure("`indexPathAfterUpdate` cannot be `nil` for a `.reload` update action.")
                 return nil
             }
@@ -98,5 +97,4 @@ enum ChangeItem: Equatable {
             return nil
         }
     }
-
 }
