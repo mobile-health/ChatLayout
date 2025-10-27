@@ -3,7 +3,7 @@
 // CachingImageLoader.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -23,8 +23,10 @@ public struct CachingImageLoader<C: AsyncKeyValueCaching>: ImageLoader where C.C
         self.loader = loader
     }
 
-    public func loadImage(from url: URL,
-                          completion: @escaping (Result<UIImage, Error>) -> Void) {
+    public func loadImage(
+        from url: URL,
+        completion: @escaping (Result<UIImage, Error>) -> Void
+    ) {
         let imageKey = CacheableImageKey(url: url)
         cache.getEntity(for: imageKey, completion: { result in
             guard case .failure = result else {

@@ -3,7 +3,7 @@
 // StaticViewFactory.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -14,6 +14,7 @@ import Foundation
 import UIKit
 
 /// A factory that creates optional contained `UIView`s should conform to this protocol.
+@MainActor
 public protocol StaticViewFactory {
     /// A type of the view to build.
     associatedtype View: UIView
@@ -26,6 +27,7 @@ public protocol StaticViewFactory {
 
 /// Default extension build the `UIView` using its default constructor.
 public extension StaticViewFactory where Self: UIView {
+    /// Default extension build the `UIView` using its default constructor.
     static func buildView(within bounds: CGRect) -> Self? {
         Self(frame: bounds)
     }

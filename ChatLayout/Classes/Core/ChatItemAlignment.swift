@@ -3,7 +3,7 @@
 // ChatItemAlignment.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -14,7 +14,7 @@ import Foundation
 import UIKit
 
 /// Represent item alignment in collection view layout
-public enum ChatItemAlignment: Hashable {
+public enum ChatItemAlignment: Hashable, Sendable {
     /// Should be aligned at the leading edge of the layout. That includes all the additional content offsets.
     case leading
 

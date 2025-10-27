@@ -3,7 +3,7 @@
 // AppDelegate.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -19,17 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         guard !ProcessInfo.isRunningTests else {
             return false
-        }
-        if #available(iOS 13.0, *) {
-        } else {
-            let window = UIWindow()
-
-            let chatViewController = ChatViewControllerBuilder().build()
-            let viewController = UINavigationController(rootViewController: chatViewController)
-
-            self.window = window
-            window.rootViewController = viewController
-            window.makeKeyAndVisible()
         }
         return true
     }

@@ -3,7 +3,7 @@
 // ChatViewControllerBuilder.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -20,10 +20,12 @@ struct ChatViewControllerBuilder {
 
         let editNotifier = EditNotifier()
         let swipeNotifier = SwipeNotifier()
-        let dataSource = DefaultChatCollectionDataSource(editNotifier: editNotifier,
-                                                         swipeNotifier: swipeNotifier,
-                                                         reloadDelegate: messageController,
-                                                         editingDelegate: messageController)
+        let dataSource = DefaultChatCollectionDataSource(
+            editNotifier: editNotifier,
+            swipeNotifier: swipeNotifier,
+            reloadDelegate: messageController,
+            editingDelegate: messageController
+        )
 
         dataProvider.delegate = messageController
 

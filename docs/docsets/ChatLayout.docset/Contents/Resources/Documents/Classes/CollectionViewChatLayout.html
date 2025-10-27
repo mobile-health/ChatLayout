@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          ChatLayout 2.0.5 Docs
+          ChatLayout 2.3.0 Docs
         </a>
          (100% documented)
       </p>
@@ -36,7 +36,9 @@
     </header>
 
     <p class="breadcrumbs">
-      <a class="breadcrumb" href="../index.html">ChatLayout Reference</a>
+      <a class="breadcrumb" href="../index.html">ChatLayout</a>
+      <img class="carat" src="../img/carat.png" alt=""/>
+      <a class="breadcrumb" href="../Core.html">Core</a>
       <img class="carat" src="../img/carat.png" alt=""/>
       CollectionViewChatLayout Class Reference
     </p>
@@ -60,6 +62,9 @@
                 <a class="nav-group-task-link" href="../Structs/ChatLayoutSettings.html">ChatLayoutSettings</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ChatLayoutSettings/PinneableItems.html">– PinneableItems</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a>
               </li>
               <li class="nav-group-task">
@@ -79,6 +84,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/ChatItemAlignment.html">ChatItemAlignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ChatItemPinningType.html">ChatItemPinningType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/InitialAttributesRequestType.html">InitialAttributesRequestType</a>
@@ -159,14 +167,15 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">CollectionViewChatLayout</span> <span class="p">:</span> <span class="kt">UICollectionViewLayout</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">class</span> <span class="kt">CollectionViewChatLayout</span> <span class="p">:</span> <span class="kt">UICollectionViewLayout</span></code></pre>
 
                 </div>
               </div>
-            <p>A collection view layout designed to display items in a grid similar to <code>UITableView</code>, while aligning them to the
-leading or trailing edge of the <code>UICollectionView</code>. This layout facilitates chat-like behavior by maintaining
-a constant content offset from the bottom. Additionally, it is capable of handling autosizing cells and
-supplementary views.</p>
+            <p>A custom collection view layout designed to present items in a grid-like format, similar to UITableView, while aligning content to
+either the leading or trailing edge of the UICollectionView. This layout supports chat-style interfaces by preserving a consistent
+content offset from the bottom. It also accommodates self-sizing cells and supplementary views, ensuring dynamic and responsive
+content presentation.</p>
 <h3 id='custom-properties' class='heading'>Custom Properties:</h3>
 
 <p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C8delegateAA0aB8Delegate_pSgvp">CollectionViewChatLayout.delegate</a></code></p>
@@ -177,6 +186,8 @@ supplementary views.</p>
 
 <p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C45processOnlyVisibleItemsOnAnimatedBatchUpdatesSbvp">CollectionViewChatLayout.processOnlyVisibleItemsOnAnimatedBatchUpdates</a></code></p>
 
+<p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C32keepContentAtBottomOfVisibleAreaSbvp">CollectionViewChatLayout.keepContentAtBottomOfVisibleArea</a></code></p>
+
 <p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C13visibleBoundsSo6CGRectVvp">CollectionViewChatLayout.visibleBounds</a></code></p>
 
 <p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C11layoutFrameSo6CGRectVvp">CollectionViewChatLayout.layoutFrame</a></code></p>
@@ -185,6 +196,10 @@ supplementary views.</p>
 <p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C24getContentOffsetSnapshot4fromAA0ab8PositionH0VSgAG4EdgeO_tF">CollectionViewChatLayout.getContentOffsetSnapshot(...)</a></code></p>
 
 <p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C20restoreContentOffset4withyAA0aB16PositionSnapshotV_tF">CollectionViewChatLayout.restoreContentOffset(...)</a></code></p>
+
+<p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C16reconfigureItems2atySay10Foundation9IndexPathVG_tF">CollectionViewChatLayout.reconfigureItems(...)</a></code></p>
+
+<p><code><a href="../Classes/CollectionViewChatLayout.html#/s:10ChatLayout014CollectionViewaB0C23indexPathForItePinnedAty10Foundation05IndexF0VSgAA0A15ItemPinningTypeOF">CollectionViewChatLayout.indexPathForItePinnedAt(...)</a></code></p>
 
           </div>
         </section>
@@ -222,7 +237,8 @@ supplementary views.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ChatLayoutDelegate.html">ChatLayoutDelegate</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ChatLayoutDelegate.html">ChatLayoutDelegate</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -249,7 +265,8 @@ supplementary views.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">settings</span><span class="p">:</span> <span class="kt"><a href="../Structs/ChatLayoutSettings.html">ChatLayoutSettings</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">settings</span><span class="p">:</span> <span class="kt"><a href="../Structs/ChatLayoutSettings.html">ChatLayoutSettings</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -269,20 +286,22 @@ supplementary views.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The default <code>UIScrollView</code> behaviour is to keep content offset constant from the top edge. If this flag is set to <code>true</code>
-<code>CollectionViewChatLayout</code> should try to compensate batch update changes to keep the current content at the bottom of the visible
-part of <code>UICollectionView</code>.</p>
+                        <p>By default, <code>UIScrollView</code> maintains a constant content offset relative to the top edge. When this flag is set to true,
+<code>CollectionViewChatLayout</code> will attempt to adjust for batch updates in order to keep the currently visible content anchored
+to the bottom of the UICollectionView.</p>
 
 <p><strong>NB:</strong>
-Keep in mind that if during the batch content inset changes also (e.g. keyboard frame changes), <code>CollectionViewChatLayout</code> will usually get that information after
-the animation starts and wont be able to compensate that change too. It should be done manually.</p>
+If the content inset changes during the batch update—for example, due to keyboard frame adjustments - <code>CollectionViewChatLayout</code>
+typically receives this information after the animation begins and may not be able to account for it automatically. In such cases, manual
+compensation is required.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keepContentOffsetAtBottomOnBatchUpdates</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">keepContentOffsetAtBottomOnBatchUpdates</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -302,16 +321,17 @@ the animation starts and wont be able to compensate that change too. It should b
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The default behavior of UICollectionView is to maintain UICollectionViewCells at the top of the visible rectangle
-when the content size is smaller than the visible area. By setting the respective flag to true, this behavior can be
-reversed to achieve the result like in Telegram..</p>
+                        <p>By default, <code>UICollectionView</code> positions its cells at the top of the visible area when the content size is smaller than the viewport.
+Enabling this flag reverses that behavior, allowing cells to align with the bottom edge of the <code>UICollectionView</code> - similar to the behavior
+seen in applications like Telegram.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">keepContentAtBottomOfVisibleArea</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">keepContentAtBottomOfVisibleArea</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -331,7 +351,9 @@ reversed to achieve the result like in Telegram..</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>tries to process only the elements that are currently visible on the screen. But often it is not needed. This flag allows you to have fine control over this behaviour.
+                        <p>Sometimes <code>UIScrollView</code> can behave weirdly if there are too many corrections in it&rsquo;s <code>contentOffset</code> during the animation. Especially when content size of the <code>UIScrollView</code>
+is getting smaller first and then expands again as the newly appearing cells sizes are being calculated. That is why <code>CollectionViewChatLayout</code>
+tries to process only the elements that are currently visible on the screen. But often it is not needed. This flag allows you to have fine control over this behaviour.
 It set to <code>true</code> by default to keep the compatibility with the older versions of the library.</p>
 
 <p><strong>NB:</strong>
@@ -342,7 +364,8 @@ This flag is only to provide fine control over the batch updates. If in doubts -
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">processOnlyVisibleItemsOnAnimatedBatchUpdates</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">processOnlyVisibleItemsOnAnimatedBatchUpdates</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -362,12 +385,13 @@ This flag is only to provide fine control over the batch updates. If in doubts -
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>A mode that enables automatic self-sizing invalidation after Auto Layout changes. It&rsquo;s advisable to continue using the reload/reconfigure method, especially when multiple
-changes occur concurrently in an animated fashion. This approach ensures that the <code>CollectionViewChatLayout</code> can handle these changes while maintaining the content offset accurately.
-Consider using it when no better alternatives are available.</p>
+                        <p>Enables a mode for automatic self-sizing invalidation in response to Auto Layout changes. While this can be useful in certain scenarios,
+it is generally recommended to continue using explicit reload/reconfigure methods - particularly when multiple changes occur
+simultaneously with animation. This ensures that <code>CollectionViewChatLayout</code> can manage layout updates while preserving content
+offset consistency.</p>
 
 <p><strong>NB:</strong>
-This is an experimental flag.</p>
+This is an experimental feature and should be used only when no more reliable alternatives are available.</p>
 
                       </div>
                       <div class="declaration">
@@ -375,6 +399,7 @@ This is an experimental flag.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">16.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
+<span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="k">var</span> <span class="nv">supportSelfSizingInvalidation</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
@@ -402,7 +427,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">visibleBounds</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">visibleBounds</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -429,7 +455,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">var</span> <span class="nv">layoutFrame</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">layoutFrame</span><span class="p">:</span> <span class="kt">CGRect</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -469,7 +496,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">developmentLayoutDirection</span><span class="p">:</span> <span class="kt">UIUserInterfaceLayoutDirection</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">developmentLayoutDirection</span><span class="p">:</span> <span class="kt">UIUserInterfaceLayoutDirection</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -496,7 +524,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">flipsHorizontallyInOppositeLayoutDirection</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">flipsHorizontallyInOppositeLayoutDirection</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -523,7 +552,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">layoutAttributesClass</span><span class="p">:</span> <span class="kt">AnyClass</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">override</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">layoutAttributesClass</span><span class="p">:</span> <span class="kt">AnyClass</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -550,7 +580,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">override</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">invalidationContextClass</span><span class="p">:</span> <span class="kt">AnyClass</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">override</span> <span class="kd">class</span> <span class="k">var</span> <span class="nv">invalidationContextClass</span><span class="p">:</span> <span class="kt">AnyClass</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -577,7 +608,8 @@ This is an experimental flag.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">collectionViewContentSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="k">var</span> <span class="nv">collectionViewContentSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -608,7 +640,8 @@ Bug reported: <a href="https://feedbackassistant.apple.com/feedback/9727104">htt
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">enableIOS15_1Fix</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">enableIOS15_1Fix</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -648,7 +681,8 @@ Bug reported: <a href="https://feedbackassistant.apple.com/feedback/9727104">htt
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">flipsHorizontallyInOppositeLayoutDirection</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">flipsHorizontallyInOppositeLayoutDirection</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -696,7 +730,8 @@ right-to-left layout.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -736,7 +771,8 @@ right-to-left layout.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">getContentOffsetSnapshot</span><span class="p">(</span><span class="n">from</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt"><a href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a></span><span class="o">.</span><span class="kt">Edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a></span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">getContentOffsetSnapshot</span><span class="p">(</span><span class="n">from</span> <span class="nv">edge</span><span class="p">:</span> <span class="kt"><a href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a></span><span class="o">.</span><span class="kt">Edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -786,7 +822,8 @@ right-to-left layout.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">restoreContentOffset</span><span class="p">(</span><span class="n">with</span> <span class="nv">snapshot</span><span class="p">:</span> <span class="kt"><a href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">restoreContentOffset</span><span class="p">(</span><span class="n">with</span> <span class="nv">snapshot</span><span class="p">:</span> <span class="kt"><a href="../Structs/ChatLayoutPositionSnapshot.html">ChatLayoutPositionSnapshot</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -839,7 +876,36 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">reconfigureItems</span><span class="p">(</span><span class="n">at</span> <span class="nv">indexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">IndexPath</span><span class="p">])</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">reconfigureItems</span><span class="p">(</span><span class="n">at</span> <span class="nv">indexPaths</span><span class="p">:</span> <span class="p">[</span><span class="kt">IndexPath</span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10ChatLayout014CollectionViewaB0C23indexPathForItePinnedAty10Foundation05IndexF0VSgAA0A15ItemPinningTypeOF"></a>
+                    <a name="//apple_ref/swift/Method/indexPathForItePinnedAt(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10ChatLayout014CollectionViewaB0C23indexPathForItePinnedAty10Foundation05IndexF0VSgAA0A15ItemPinningTypeOF">indexPathForItePinnedAt(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns index path of currently pinned item.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="kd">func</span> <span class="nf">indexPathForItePinnedAt</span><span class="p">(</span><span class="n">_</span> <span class="nv">pinningType</span><span class="p">:</span> <span class="kt"><a href="../Enums/ChatItemPinningType.html">ChatItemPinningType</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IndexPath</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -879,7 +945,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -906,7 +973,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="k">in</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="k">in</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]?</span></code></pre>
 
                         </div>
                       </div>
@@ -933,7 +1001,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForItem</span><span class="p">(</span><span class="n">at</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForItem</span><span class="p">(</span><span class="n">at</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -960,8 +1029,11 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForSupplementaryView</span><span class="p">(</span><span class="n">ofKind</span> <span class="nv">elementKind</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                                        <span class="n">at</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForSupplementaryView</span><span class="p">(</span>
+    <span class="n">ofKind</span> <span class="nv">elementKind</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">at</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1001,7 +1073,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">forAnimatedBoundsChange</span> <span class="nv">oldBounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">forAnimatedBoundsChange</span> <span class="nv">oldBounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1028,7 +1101,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalizeAnimatedBoundsChange</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalizeAnimatedBoundsChange</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -1068,8 +1142,11 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">shouldInvalidateLayout</span><span class="p">(</span><span class="n">forPreferredLayoutAttributes</span> <span class="nv">preferredAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">,</span>
-                                          <span class="n">withOriginalAttributes</span> <span class="nv">originalAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">shouldInvalidateLayout</span><span class="p">(</span>
+    <span class="n">forPreferredLayoutAttributes</span> <span class="nv">preferredAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">,</span>
+    <span class="n">withOriginalAttributes</span> <span class="nv">originalAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -1096,8 +1173,11 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidationContext</span><span class="p">(</span><span class="n">forPreferredLayoutAttributes</span> <span class="nv">preferredAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">,</span>
-                                       <span class="n">withOriginalAttributes</span> <span class="nv">originalAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidationContext</span><span class="p">(</span>
+    <span class="n">forPreferredLayoutAttributes</span> <span class="nv">preferredAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">,</span>
+    <span class="n">withOriginalAttributes</span> <span class="nv">originalAttributes</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutAttributes</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span></code></pre>
 
                         </div>
                       </div>
@@ -1124,7 +1204,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">shouldInvalidateLayout</span><span class="p">(</span><span class="n">forBoundsChange</span> <span class="nv">newBounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">shouldInvalidateLayout</span><span class="p">(</span><span class="n">forBoundsChange</span> <span class="nv">newBounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -1151,7 +1232,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidationContext</span><span class="p">(</span><span class="n">forBoundsChange</span> <span class="nv">newBounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidationContext</span><span class="p">(</span><span class="n">forBoundsChange</span> <span class="nv">newBounds</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span></code></pre>
 
                         </div>
                       </div>
@@ -1178,7 +1260,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidateLayout</span><span class="p">(</span><span class="n">with</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidateLayout</span><span class="p">(</span><span class="n">with</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">UICollectionViewLayoutInvalidationContext</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -1205,7 +1288,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidateLayout</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">invalidateLayout</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -1232,7 +1316,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">targetContentOffset</span><span class="p">(</span><span class="n">forProposedContentOffset</span> <span class="nv">proposedContentOffset</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGPoint</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">targetContentOffset</span><span class="p">(</span><span class="n">forProposedContentOffset</span> <span class="nv">proposedContentOffset</span><span class="p">:</span> <span class="kt">CGPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGPoint</span></code></pre>
 
                         </div>
                       </div>
@@ -1272,7 +1357,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">forCollectionViewUpdates</span> <span class="nv">updateItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">UICollectionViewUpdateItem</span><span class="p">])</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">prepare</span><span class="p">(</span><span class="n">forCollectionViewUpdates</span> <span class="nv">updateItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">UICollectionViewUpdateItem</span><span class="p">])</span></code></pre>
 
                         </div>
                       </div>
@@ -1299,7 +1385,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalizeCollectionViewUpdates</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalizeCollectionViewUpdates</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
@@ -1339,7 +1426,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">initialLayoutAttributesForAppearingItem</span><span class="p">(</span><span class="n">at</span> <span class="nv">itemIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">initialLayoutAttributesForAppearingItem</span><span class="p">(</span><span class="n">at</span> <span class="nv">itemIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1366,7 +1454,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalLayoutAttributesForDisappearingItem</span><span class="p">(</span><span class="n">at</span> <span class="nv">itemIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalLayoutAttributesForDisappearingItem</span><span class="p">(</span><span class="n">at</span> <span class="nv">itemIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1406,8 +1495,11 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">initialLayoutAttributesForAppearingSupplementaryElement</span><span class="p">(</span><span class="n">ofKind</span> <span class="nv">elementKind</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                                                           <span class="n">at</span> <span class="nv">elementIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">initialLayoutAttributesForAppearingSupplementaryElement</span><span class="p">(</span>
+    <span class="n">ofKind</span> <span class="nv">elementKind</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">at</span> <span class="nv">elementIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1434,8 +1526,11 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalLayoutAttributesForDisappearingSupplementaryElement</span><span class="p">(</span><span class="n">ofKind</span> <span class="nv">elementKind</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                                                                            <span class="n">at</span> <span class="nv">elementIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">open</span> <span class="k">override</span> <span class="kd">func</span> <span class="nf">finalLayoutAttributesForDisappearingSupplementaryElement</span><span class="p">(</span>
+    <span class="n">ofKind</span> <span class="nv">elementKind</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="n">at</span> <span class="nv">elementIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -1450,8 +1545,8 @@ this - move to the <code>UICollectionView.reloadItems(..)</code> as a safer opti
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2024 <a class="link" href="https://github.com/ekazaev" target="_blank" rel="external noopener">Evgeny Kazaev</a>. All rights reserved. (Last updated: 2024-04-30)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+      <p>&copy; 2025 <a class="link" href="https://github.com/ekazaev" target="_blank" rel="external noopener">Evgeny Kazaev</a>. All rights reserved. (Last updated: 2025-10-10)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
 </html>

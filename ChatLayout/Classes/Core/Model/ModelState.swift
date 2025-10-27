@@ -3,7 +3,7 @@
 // ModelState.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -12,7 +12,7 @@
 
 import Foundation
 
-enum ModelState: Hashable, CaseIterable {
+enum ModelState: Hashable, CaseIterable, Sendable {
     case beforeUpdate
     case afterUpdate
 }

@@ -3,7 +3,7 @@
 // EdgeAligningView.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -79,9 +79,11 @@ public final class EdgeAligningView<CustomView: UIView>: UIView {
     ///   - customView: An instance of `CustomView`
     ///   - flexibleEdges: Set of edges to be set as loose.
     ///   - preferredPriority: Preferred priority of the internal constraints.
-    public init(with customView: CustomView,
-                flexibleEdges: Set<Edge> = [.top],
-                preferredPriority: UILayoutPriority = .required) {
+    public init(
+        with customView: CustomView,
+        flexibleEdges: Set<Edge> = [.top],
+        preferredPriority: UILayoutPriority = .required
+    ) {
         self.customView = customView
         self.flexibleEdges = flexibleEdges
         self.preferredPriority = preferredPriority
@@ -104,9 +106,11 @@ public final class EdgeAligningView<CustomView: UIView>: UIView {
     ///   - flexibleEdges: Set of edges to be set as loose.
     ///   - preferredPriority: Preferred priority of the internal constraints.
     ///   to the superview in which you plan to add it.
-    public init(frame: CGRect,
-                flexibleEdges: Set<Edge> = [],
-                preferredPriority: UILayoutPriority = .required) {
+    public init(
+        frame: CGRect,
+        flexibleEdges: Set<Edge> = [],
+        preferredPriority: UILayoutPriority = .required
+    ) {
         customView = CustomView(frame: frame)
         self.flexibleEdges = flexibleEdges
         self.preferredPriority = preferredPriority
@@ -114,8 +118,8 @@ public final class EdgeAligningView<CustomView: UIView>: UIView {
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Use init(with:flexibleEdges:) instead.")
     /// This constructor is unavailable.
+    @available(*, unavailable, message: "Use init(with:flexibleEdges:) instead.")
     public required init?(coder: NSCoder) {
         fatalError("Use init(with:flexibleEdges:) instead.")
     }
@@ -185,21 +189,27 @@ public final class EdgeAligningView<CustomView: UIView>: UIView {
     }
 
     private func buildCenterConstraints(_ view: UIView) -> (centerX: NSLayoutConstraint, centerY: NSLayoutConstraint) {
-        (centerX: view.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor, priority: preferredPriority),
-         centerY: view.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor, priority: preferredPriority))
+        (
+            centerX: view.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor, priority: preferredPriority),
+            centerY: view.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor, priority: preferredPriority)
+        )
     }
 
     private func buildRigidConstraints(_ view: UIView) -> [Edge: NSLayoutConstraint] {
-        [.top: view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
-         .bottom: view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority),
-         .leading: view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
-         .trailing: view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)]
+        [
+            .top: view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
+            .bottom: view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority),
+            .leading: view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
+            .trailing: view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)
+        ]
     }
 
     private func buildFlexibleConstraints(_ view: UIView) -> [Edge: NSLayoutConstraint] {
-        [.top: view.topAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
-         .bottom: view.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority),
-         .leading: view.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
-         .trailing: view.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)]
+        [
+            .top: view.topAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
+            .bottom: view.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority),
+            .leading: view.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
+            .trailing: view.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)
+        ]
     }
 }

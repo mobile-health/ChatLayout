@@ -3,7 +3,7 @@
 // ChatLayoutAttributes.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -17,6 +17,9 @@ import UIKit
 public final class ChatLayoutAttributes: UICollectionViewLayoutAttributes {
     /// Alignment of the current item. Can be changed within `UICollectionViewCell.preferredLayoutAttributesFitting(...)`
     public var alignment: ChatItemAlignment = .fullWidth
+
+    /// Pinning behavour of the current item.
+    public var pinningType: ChatItemPinningType? = nil
 
     /// Inter item spacing. Can be changed within `UICollectionViewCell.preferredLayoutAttributesFitting(...)`
     public var interItemSpacing: CGFloat = 0
@@ -40,6 +43,7 @@ public final class ChatLayoutAttributes: UICollectionViewLayoutAttributes {
     var id: UUID?
     #endif
 
+    @available(*, deprecated, message: "Support for supplementary views is deprecated and will be discontinued in future versions.")
     convenience init(kind: ItemKind, indexPath: IndexPath = IndexPath(item: 0, section: 0)) {
         switch kind {
         case .cell:
@@ -49,6 +53,10 @@ public final class ChatLayoutAttributes: UICollectionViewLayoutAttributes {
         case .footer:
             self.init(forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, with: indexPath)
         }
+    }
+
+    convenience init(indexPath: IndexPath = IndexPath(item: 0, section: 0)) {
+        self.init(forCellWith: indexPath)
     }
 
     /// Returns an exact copy of `ChatLayoutAttributes`.
@@ -61,6 +69,7 @@ public final class ChatLayoutAttributes: UICollectionViewLayoutAttributes {
         copy.additionalInsets = additionalInsets
         copy.visibleBoundsSize = visibleBoundsSize
         copy.adjustedContentInsets = adjustedContentInsets
+        copy.pinningType = pinningType
         #if DEBUG
         copy.id = id
         #endif
@@ -69,9 +78,18 @@ public final class ChatLayoutAttributes: UICollectionViewLayoutAttributes {
 
     /// Returns a Boolean value indicating whether two `ChatLayoutAttributes` are considered equal.
     public override func isEqual(_ object: Any?) -> Bool {
-        super.isEqual(object)
-            && alignment == (object as? ChatLayoutAttributes)?.alignment
-            && interItemSpacing == (object as? ChatLayoutAttributes)?.interItemSpacing
+        let chatLayoutAttributes = (object as? ChatLayoutAttributes)
+        /* isEqual inherits from ObjC and is not isolated.
+         * ChatLayoutAttributes is MainActor isolated; in theory it **cannot** be used outside of the main actor.
+         * If isEqual is called outside of the main actor, we’ll crash, which is good, because it would be unsafe anyway.
+         * (One possible example would be to have a collection type that would do things on the background and compare two ChatLayoutAttributes,
+         *  but as stated above, that would be unsafe, so it’s good to crash if that happens.) */
+        return MainActor.assumeIsolated {
+            super.isEqual(chatLayoutAttributes)
+                && pinningType == chatLayoutAttributes?.pinningType
+                && alignment == chatLayoutAttributes?.alignment
+                && interItemSpacing == chatLayoutAttributes?.interItemSpacing
+        }
     }
 
     /// `ItemKind` represented by this attributes object.

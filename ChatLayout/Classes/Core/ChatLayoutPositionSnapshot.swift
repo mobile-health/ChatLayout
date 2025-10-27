@@ -3,7 +3,7 @@
 // ChatLayoutPositionSnapshot.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -14,9 +14,9 @@ import Foundation
 import UIKit
 
 /// Represents content offset position expressed by the specific item and it offset from the top or bottom edge.
-public struct ChatLayoutPositionSnapshot: Hashable {
+public struct ChatLayoutPositionSnapshot: Hashable, Sendable {
     /// Represents the edge.
-    public enum Edge: Hashable {
+    public enum Edge: Hashable, Sendable {
         /// Top edge of the `UICollectionView`
         case top
 
@@ -28,6 +28,7 @@ public struct ChatLayoutPositionSnapshot: Hashable {
     public var indexPath: IndexPath
 
     /// Kind of item at the `indexPath`
+    @available(*, deprecated, message: "Support for supplementary views is deprecated and will be discontinued in future versions.")
     public var kind: ItemKind
 
     /// The edge of the offset.
@@ -42,13 +43,32 @@ public struct ChatLayoutPositionSnapshot: Hashable {
     ///   - edge: The edge of the offset.
     ///   - offset: The offset from the `edge`.
     ///   - kind: Kind of item at the `indexPath`
-    public init(indexPath: IndexPath,
-                kind: ItemKind,
-                edge: Edge,
-                offset: CGFloat = 0) {
+    @available(*, deprecated, message: "Support for supplementary views is deprecated and will be discontinued in future versions.")
+    public init(
+        indexPath: IndexPath,
+        kind: ItemKind,
+        edge: Edge,
+        offset: CGFloat = 0
+    ) {
         self.indexPath = indexPath
         self.edge = edge
         self.offset = offset
         self.kind = kind
+    }
+
+    /// Constructor
+    /// - Parameters:
+    ///   - indexPath: Item's `IndexPath`
+    ///   - edge: The edge of the offset.
+    ///   - offset: The offset from the `edge`.
+    public init(
+        indexPath: IndexPath,
+        edge: Edge,
+        offset: CGFloat = 0
+    ) {
+        self.indexPath = indexPath
+        self.edge = edge
+        self.offset = offset
+        kind = .cell
     }
 }

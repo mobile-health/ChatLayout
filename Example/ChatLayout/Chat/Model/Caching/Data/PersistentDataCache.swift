@@ -3,7 +3,7 @@
 // PersistentDataCache.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -25,9 +25,11 @@ class PersistentDataCache<CachingKey: PersistentlyCacheable>: AsyncKeyValueCachi
 
     private let cacheFileExtension: String
 
-    init(defaultTimeToLive: TimeInterval = 7 * 24 * 3600,
-         persistencePath: String = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!,
-         cacheFileExtension: String = String(describing: CachingKey.self)) {
+    init(
+        defaultTimeToLive: TimeInterval = 7 * 24 * 3600,
+        persistencePath: String = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!,
+        cacheFileExtension: String = String(describing: CachingKey.self)
+    ) {
         self.persistencePath = persistencePath
         self.defaultTimeToLive = defaultTimeToLive
         self.cacheFileExtension = cacheFileExtension.addingPercentEncoding(withAllowedCharacters: .letters)!

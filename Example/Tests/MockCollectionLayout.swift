@@ -3,7 +3,7 @@
 // MockCollectionLayout.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -18,6 +18,8 @@ class MockCollectionLayout: ChatLayoutRepresentation, ChatLayoutDelegate {
     var numberOfItemsInSection: [Int: Int] = [0: 100, 1: 100, 2: 100]
     var shouldPresentHeaderAtSection: [Int: Bool] = [0: true, 1: true, 2: true]
     var shouldPresentFooterAtSection: [Int: Bool] = [0: true, 1: true, 2: true]
+    var shouldPinHeaderToVisibleBoundsAtSection: [Int: Bool] = [0: false, 1: false, 2: false]
+    var shouldPinFooterToVisibleBoundsAtSection: [Int: Bool] = [0: false, 1: false, 2: false]
 
     // swiftlint:disable weak_delegate
     lazy var delegate: ChatLayoutDelegate? = self
@@ -34,10 +36,12 @@ class MockCollectionLayout: ChatLayoutRepresentation, ChatLayoutDelegate {
 
     /// Represent the rectangle where all the items are aligned.
     public var layoutFrame: CGRect {
-        CGRect(x: adjustedContentInset.left + settings.additionalInsets.left,
-               y: adjustedContentInset.top + settings.additionalInsets.top,
-               width: visibleBounds.width - settings.additionalInsets.left - settings.additionalInsets.right,
-               height: controller.contentHeight(at: state) - settings.additionalInsets.top - settings.additionalInsets.bottom)
+        CGRect(
+            x: adjustedContentInset.left + settings.additionalInsets.left,
+            y: adjustedContentInset.top + settings.additionalInsets.top,
+            width: visibleBounds.width - settings.additionalInsets.left - settings.additionalInsets.right,
+            height: controller.contentHeight(at: state) - settings.additionalInsets.top - settings.additionalInsets.bottom
+        )
     }
 
     let adjustedContentInset: UIEdgeInsets = .zero
@@ -48,12 +52,29 @@ class MockCollectionLayout: ChatLayoutRepresentation, ChatLayoutDelegate {
 
     let processOnlyVisibleItemsOnAnimatedBatchUpdates: Bool = true
 
+    var hasPinnedHeaderOrFooter: Bool = false
+
     func numberOfItems(in section: Int) -> Int {
         numberOfItemsInSection[section] ?? 0
     }
 
     func configuration(for element: ItemKind, at indexPath: IndexPath) -> ItemModel.Configuration {
-        .init(alignment: .fullWidth, preferredSize: settings.estimatedItemSize!, calculatedSize: settings.estimatedItemSize!, interItemSpacing: settings.interItemSpacing)
+        let pinningType: ChatItemPinningType?
+        switch element {
+        case .header:
+            pinningType = shouldPinHeaderToVisibleBoundsAtSection[indexPath.section] == true ? .top : nil
+        case .footer:
+            pinningType = shouldPinFooterToVisibleBoundsAtSection[indexPath.section] == true ? .bottom : nil
+        case .cell:
+            pinningType = nil
+        }
+        return .init(
+            alignment: .fullWidth,
+            pinningType: pinningType,
+            preferredSize: settings.estimatedItemSize!,
+            calculatedSize: settings.estimatedItemSize!,
+            interItemSpacing: settings.interItemSpacing
+        )
     }
 
     func shouldPresentHeader(at sectionIndex: Int) -> Bool {
@@ -93,7 +114,13 @@ class MockCollectionLayout: ChatLayoutRepresentation, ChatLayoutDelegate {
                 items.append(ItemModel(with: configuration(for: .cell, at: indexPath)))
             }
 
-            var section = SectionModel(interSectionSpacing: interSectionSpacing(at: sectionIndex), header: header, footer: footer, items: items, collectionLayout: self)
+            var section = SectionModel(
+                interSectionSpacing: interSectionSpacing(at: sectionIndex),
+                header: header,
+                footer: footer,
+                items: items,
+                collectionLayout: self
+            )
             section.assembleLayout()
             sections.append(section)
         }

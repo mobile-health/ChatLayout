@@ -3,7 +3,7 @@
 // ItemModel.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -13,9 +13,13 @@
 import Foundation
 import UIKit
 
+@MainActor
 struct ItemModel {
+    @MainActor
     struct Configuration {
         let alignment: ChatItemAlignment
+
+        let pinningType: ChatItemPinningType?
 
         let preferredSize: CGSize
 
@@ -35,6 +39,8 @@ struct ItemModel {
     var calculatedOnce: Bool = false
 
     var alignment: ChatItemAlignment
+
+    var pinningType: ChatItemPinningType?
 
     var interItemSpacing: CGFloat
 
@@ -57,12 +63,13 @@ struct ItemModel {
         interItemSpacing = configuration.interItemSpacing
         calculatedSize = configuration.calculatedSize
         calculatedOnce = configuration.calculatedSize != nil
+        pinningType = configuration.pinningType
     }
 
     // We are just resetting `calculatedSize` if needed as the actual size will be found in
     // `invalidationContext(forPreferredLayoutAttributes:, withOriginalAttributes:)`.
     // It is important for the rotation to keep previous frame size.
-    mutating func resetSize() {
+    nonisolated mutating func resetSize() {
         guard let calculatedSize else {
             return
         }

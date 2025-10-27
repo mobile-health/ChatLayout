@@ -3,7 +3,7 @@
 // ChatViewController.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -78,10 +78,12 @@ final class ChatViewController: UIViewController {
         return gesture
     }()
 
-    init(chatController: ChatController,
-         dataSource: ChatCollectionDataSource,
-         editNotifier: EditNotifier,
-         swipeNotifier: SwipeNotifier) {
+    init(
+        chatController: ChatController,
+        dataSource: ChatCollectionDataSource,
+        editNotifier: EditNotifier,
+        swipeNotifier: SwipeNotifier
+    ) {
         self.chatController = chatController
         self.dataSource = dataSource
         self.editNotifier = editNotifier
@@ -103,11 +105,7 @@ final class ChatViewController: UIViewController {
         super.viewDidLoad()
         fpsCounter.delegate = self
         fpsCounter.startTracking()
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
 
         inputBarView.delegate = self
 
@@ -116,13 +114,8 @@ final class ChatViewController: UIViewController {
         fpsView.layoutMargins = UIEdgeInsets(top: 8, left: 16, bottom: 0, right: 16)
         fpsView.customView.font = .preferredFont(forTextStyle: .caption2)
         fpsView.customView.text = "FPS: unknown"
-        if #available(iOS 13.0, *) {
-            fpsView.backgroundColor = .systemBackground
-            fpsView.customView.textColor = .systemGray3
-        } else {
-            fpsView.backgroundColor = .white
-            fpsView.customView.textColor = .lightGray
-        }
+        fpsView.backgroundColor = .systemBackground
+        fpsView.customView.textColor = .systemGray3
         inputBarView.topStackView.addArrangedSubview(fpsView)
         inputBarView.shouldAnimateTextDidChangeLayout = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Show Keyboard", style: .plain, target: self, action: #selector(ChatViewController.showHideKeyboard))
@@ -131,6 +124,7 @@ final class ChatViewController: UIViewController {
         chatLayout.settings.interItemSpacing = 8
         chatLayout.settings.interSectionSpacing = 8
         chatLayout.settings.additionalInsets = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
+        chatLayout.settings.pinnableItems = .cells
         chatLayout.keepContentOffsetAtBottomOnBatchUpdates = true
         chatLayout.processOnlyVisibleItemsOnAnimatedBatchUpdates = false
         chatLayout.keepContentAtBottomOfVisibleArea = true
@@ -235,10 +229,12 @@ final class ChatViewController: UIViewController {
 
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        swipeNotifier.setAccessoryOffset(UIEdgeInsets(top: view.safeAreaInsets.top,
-                                                      left: view.safeAreaInsets.left + chatLayout.settings.additionalInsets.left,
-                                                      bottom: view.safeAreaInsets.bottom,
-                                                      right: view.safeAreaInsets.right + chatLayout.settings.additionalInsets.right))
+        swipeNotifier.setAccessoryOffset(UIEdgeInsets(
+            top: view.safeAreaInsets.top,
+            left: view.safeAreaInsets.left + chatLayout.settings.additionalInsets.left,
+            bottom: view.safeAreaInsets.bottom,
+            right: view.safeAreaInsets.right + chatLayout.settings.additionalInsets.right
+        ))
     }
 
     // Apple doesnt return sometimes inputBarView back to the app. This is an attempt to fix that
@@ -326,8 +322,10 @@ extension ChatViewController: UIScrollViewDelegate {
 
     func scrollToBottom(completion: (() -> Void)? = nil) {
         // I ask content size from the layout because on IOs 12 collection view contains not updated one
-        let contentOffsetAtBottom = CGPoint(x: collectionView.contentOffset.x,
-                                            y: chatLayout.collectionViewContentSize.height - collectionView.frame.height + collectionView.adjustedContentInset.bottom)
+        let contentOffsetAtBottom = CGPoint(
+            x: collectionView.contentOffset.x,
+            y: chatLayout.collectionViewContentSize.height - collectionView.frame.height + collectionView.adjustedContentInset.bottom
+        )
 
         guard contentOffsetAtBottom.y > collectionView.contentOffset.y else {
             completion?()
@@ -346,7 +344,11 @@ extension ChatViewController: UIScrollViewDelegate {
                 collectionView.contentOffset = CGPoint(x: collectionView.contentOffset.x, y: initialOffset + (delta * percentage))
                 if percentage == 1.0 {
                     animator = nil
-                    let positionSnapshot = ChatLayoutPositionSnapshot(indexPath: IndexPath(item: 0, section: 0), kind: .footer, edge: .bottom)
+                    guard let lastSection = dataSource.sections.last else {
+                        collectionView.reloadData()
+                        return
+                    }
+                    let positionSnapshot = ChatLayoutPositionSnapshot(indexPath: IndexPath(item: lastSection.cells.count - 1, section: dataSource.sections.count - 1), edge: .bottom)
                     chatLayout.restoreContentOffset(with: positionSnapshot)
                     currentInterfaceActions.options.remove(.scrollingToBottom)
                     completion?()
@@ -395,9 +397,11 @@ extension ChatViewController: UICollectionViewDelegate {
                 var center = cell.customView.customView.customView.center
                 center.x += (message.type.isIncoming ? cell.customView.customView.customView.offset : -cell.customView.customView.customView.offset) / 2
 
-                return UITargetedPreview(view: cell.customView.customView.customView,
-                                         parameters: parameters,
-                                         target: UIPreviewTarget(container: cell.customView.customView, center: center))
+                return UITargetedPreview(
+                    view: cell.customView.customView.customView,
+                    parameters: parameters,
+                    target: UIPreviewTarget(container: cell.customView.customView, center: center)
+                )
             default:
                 return nil
             }
@@ -468,15 +472,17 @@ extension ChatViewController: ChatControllerDelegate {
         }
 
         guard currentInterfaceActions.options.isEmpty else {
-            let reaction = SetActor<Set<InterfaceActions>, ReactionTypes>.Reaction(type: .delayedUpdate,
-                                                                                   action: .onEmpty,
-                                                                                   executionType: .once,
-                                                                                   actionBlock: { [weak self] in
-                                                                                       guard let self else {
-                                                                                           return
-                                                                                       }
-                                                                                       processUpdates(with: sections, animated: animated, requiresIsolatedProcess: requiresIsolatedProcess, completion: completion)
-                                                                                   })
+            let reaction = SetActor<Set<InterfaceActions>, ReactionTypes>.Reaction(
+                type: .delayedUpdate,
+                action: .onEmpty,
+                executionType: .once,
+                actionBlock: { [weak self] in
+                    guard let self else {
+                        return
+                    }
+                    processUpdates(with: sections, animated: animated, requiresIsolatedProcess: requiresIsolatedProcess, completion: completion)
+                }
+            )
             currentInterfaceActions.add(reaction: reaction)
             return
         }
@@ -496,32 +502,38 @@ extension ChatViewController: ChatControllerDelegate {
                 currentInterfaceActions.options.insert(.updatingCollectionInIsolation)
             }
             currentControllerActions.options.insert(.updatingCollection)
-            collectionView.reload(using: changeSet,
-                                  interrupt: { changeSet in
-                                      guard changeSet.sectionInserted.isEmpty else {
-                                          return true
-                                      }
-                                      return false
-                                  },
-                                  onInterruptedReload: {
-                                      let positionSnapshot = ChatLayoutPositionSnapshot(indexPath: IndexPath(item: 0, section: sections.count - 1), kind: .footer, edge: .bottom)
-                                      self.collectionView.reloadData()
-                                      // We want so that user on reload appeared at the very bottom of the layout
-                                      self.chatLayout.restoreContentOffset(with: positionSnapshot)
-                                  },
-                                  completion: { _ in
-                                      DispatchQueue.main.async {
-                                          self.chatLayout.processOnlyVisibleItemsOnAnimatedBatchUpdates = false
-                                          if requiresIsolatedProcess {
-                                              self.currentInterfaceActions.options.remove(.updatingCollectionInIsolation)
-                                          }
-                                          completion?()
-                                          self.currentControllerActions.options.remove(.updatingCollection)
-                                      }
-                                  },
-                                  setData: { data in
-                                      self.dataSource.sections = data
-                                  })
+            collectionView.reload(
+                using: changeSet,
+                interrupt: { changeSet in
+                    guard changeSet.sectionInserted.isEmpty else {
+                        return true
+                    }
+                    return false
+                },
+                onInterruptedReload: {
+                    guard let lastSection = sections.last else {
+                        self.collectionView.reloadData()
+                        return
+                    }
+                    let positionSnapshot = ChatLayoutPositionSnapshot(indexPath: IndexPath(item: lastSection.cells.count - 1, section: sections.count - 1), edge: .bottom)
+                    self.collectionView.reloadData()
+                    // We want so that user on reload appeared at the very bottom of the layout
+                    self.chatLayout.restoreContentOffset(with: positionSnapshot)
+                },
+                completion: { _ in
+                    DispatchQueue.main.async {
+                        self.chatLayout.processOnlyVisibleItemsOnAnimatedBatchUpdates = false
+                        if requiresIsolatedProcess {
+                            self.currentInterfaceActions.options.remove(.updatingCollectionInIsolation)
+                        }
+                        completion?()
+                        self.currentControllerActions.options.remove(.updatingCollection)
+                    }
+                },
+                setData: { data in
+                    self.dataSource.sections = data
+                }
+            )
         }
 
         if animated {

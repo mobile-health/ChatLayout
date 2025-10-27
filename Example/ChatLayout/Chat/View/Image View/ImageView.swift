@@ -3,7 +3,7 @@
 // ImageView.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -17,7 +17,7 @@ import UIKit
 final class ImageView: UIView, ContainerCollectionViewCellDelegate {
     private lazy var stackView = UIStackView(frame: bounds)
 
-    private lazy var loadingIndicator = UIActivityIndicatorView(style: .gray)
+    private lazy var loadingIndicator = UIActivityIndicatorView(style: .medium)
 
     private lazy var imageView = UIImageView(frame: bounds)
 
@@ -80,11 +80,7 @@ final class ImageView: UIView, ContainerCollectionViewCellDelegate {
             if !loadingIndicator.isAnimating {
                 loadingIndicator.startAnimating()
             }
-            if #available(iOS 13.0, *) {
-                backgroundColor = .systemGray5
-            } else {
-                backgroundColor = UIColor(red: 200 / 255, green: 200 / 255, blue: 200 / 255, alpha: 1)
-            }
+            backgroundColor = .systemGray5
             setupSize()
         case let .image(image):
             loadingIndicator.isHidden = true

@@ -3,7 +3,7 @@
 // SwappingContainerView.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -144,11 +144,13 @@ public final class SwappingContainerView<CustomView: UIView, AccessoryView: UIVi
     ///   - spacing: The distance in points between the edges of the contained views.
     ///   - preferredPriority: Preferred priority of the internal constraints.
     ///   to the superview in which you plan to add it.
-    public init(frame: CGRect,
-                axis: Axis = .horizontal,
-                distribution: Distribution = .accessoryFirst,
-                spacing: CGFloat,
-                preferredPriority: UILayoutPriority = .required) {
+    public init(
+        frame: CGRect,
+        axis: Axis = .horizontal,
+        distribution: Distribution = .accessoryFirst,
+        spacing: CGFloat,
+        preferredPriority: UILayoutPriority = .required
+    ) {
         customView = CustomView(frame: frame)
         accessoryView = AccessoryView(frame: frame)
         self.axis = axis
@@ -168,8 +170,8 @@ public final class SwappingContainerView<CustomView: UIView, AccessoryView: UIVi
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Use init(frame:) instead.")
     /// This constructor is unavailable.
+    @available(*, unavailable, message: "Use init(frame:) instead.")
     public required init?(coder: NSCoder) {
         fatalError("Use init(with:flexibleEdges:) instead.")
     }
@@ -181,11 +183,13 @@ public final class SwappingContainerView<CustomView: UIView, AccessoryView: UIVi
 
     /// Updates constraints for the view.
     public override func updateConstraints() {
-        let currentState = SwappingContainerState(axis: axis,
-                                                  distribution: distribution,
-                                                  spacing: spacing,
-                                                  isAccessoryHidden: accessoryView.isHidden,
-                                                  isCustomViewHidden: customView.isHidden)
+        let currentState = SwappingContainerState(
+            axis: axis,
+            distribution: distribution,
+            spacing: spacing,
+            isAccessoryHidden: accessoryView.isHidden,
+            isCustomViewHidden: customView.isHidden
+        )
         guard currentState != cachedState else {
             super.updateConstraints()
             return
@@ -274,8 +278,8 @@ public final class SwappingContainerView<CustomView: UIView, AccessoryView: UIVi
 
         if accessoryFirstObserver == nil {
             accessoryFirstObserver = accessoryView.observe(\.isHidden, options: [.new]) { [weak self] _, _ in
-                guard let self else {
-                    return
+                MainActor.assumeIsolated { [weak self] in
+                    self?.setNeedsUpdateConstraints()
                 }
                 self.setNeedsUpdateConstraints()
             }
@@ -283,8 +287,8 @@ public final class SwappingContainerView<CustomView: UIView, AccessoryView: UIVi
 
         if customViewObserver == nil {
             customViewObserver = customView.observe(\.isHidden, options: [.new]) { [weak self] _, _ in
-                guard let self else {
-                    return
+                MainActor.assumeIsolated { [weak self] in
+                    self?.setNeedsUpdateConstraints()
                 }
                 self.setNeedsUpdateConstraints()
             }
@@ -386,15 +390,27 @@ public final class SwappingContainerView<CustomView: UIView, AccessoryView: UIVi
     private func buildEdgeConstraints() -> (accessory: [NSLayoutConstraint], customView: [NSLayoutConstraint]) {
         switch axis {
         case .horizontal:
-            (accessory: [accessoryView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
-                         accessoryView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority)],
-             customView: [customView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
-                          customView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority)])
+            (
+                accessory: [
+                    accessoryView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
+                    accessoryView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority)
+                ],
+                customView: [
+                    customView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, priority: preferredPriority),
+                    customView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, priority: preferredPriority)
+                ]
+            )
         case .vertical:
-            (accessory: [accessoryView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
-                         accessoryView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)],
-             customView: [customView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
-                          customView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)])
+            (
+                accessory: [
+                    accessoryView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
+                    accessoryView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)
+                ],
+                customView: [
+                    customView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, priority: preferredPriority),
+                    customView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, priority: preferredPriority)
+                ]
+            )
         }
     }
 }

@@ -3,7 +3,7 @@
 // DefaultChatController.swift
 // https://github.com/ekazaev/ChatLayout
 //
-// Created by Eugene Kazaev in 2020-2024.
+// Created by Eugene Kazaev in 2020-2025.
 // Distributed under the MIT license.
 //
 // Become a sponsor:
@@ -81,12 +81,14 @@ final class DefaultChatController: ChatController {
                 return
             }
             let messagesSplitByDay = messages
-                .map { Message(id: $0.id,
-                               date: $0.date,
-                               data: self.convert($0.data),
-                               owner: User(id: $0.userId),
-                               type: $0.userId == self.userId ? .outgoing : .incoming,
-                               status: $0.status) }
+                .map { Message(
+                    id: $0.id,
+                    date: $0.date,
+                    data: self.convert($0.data),
+                    owner: User(id: $0.userId),
+                    type: $0.userId == self.userId ? .outgoing : .incoming,
+                    status: $0.status
+                ) }
                 .reduce(into: [[Message]]()) { result, message in
                     guard var section = result.last,
                           let prevMessage = section.last else {
